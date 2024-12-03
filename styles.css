@@ -1,0 +1,49 @@
+/* Existing styles */
+.wordcloud-container {
+    margin: 20px 0;
+}
+
+.wordcloud-container h3 {
+margin-bottom: 10px;
+}
+
+canvas {
+max-width: 100%;
+}
+
+/* New styles for search results */
+#results-container {
+max-height: 400px;
+overflow-y: auto;
+margin: 20px 0;
+padding: 10px;
+border: 1px solid #ccc;
+}
+
+.search-result {
+margin-bottom: 20px;
+}
+
+.search-result h3 {
+margin: 0;
+font-size: 18px;
+}
+
+.search-result a {
+text-decoration: none;
+color: #1a0dab;
+}
+
+.search-result a:hover {
+text-decoration: underline;
+}
+
+.search-result .display-link {
+color: #006621;
+font-size: 14px;
+}
+
+.search-result p {
+color: #4d5156;
+font-size: 14px;
+}
