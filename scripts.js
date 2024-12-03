@@ -61,6 +61,92 @@ function processSearchResults(data) {
   });
 }
 
+// ... (existing code above)
+
+// Update processSearchResults function
+function processSearchResults(data) {
+  const items = data.items || [];
+  if (!items.length) {
+    console.log('No results found');
+    return;
+  }
+
+  const resultsData = items.map(item => ({
+    title: item.title,
+    snippet: item.snippet,
+    link: item.link,
+    displayLink: item.displayLink
+  }));
+
+  // Display the search results
+  displaySearchResults(resultsData);
+
+  const titleWords = [];
+  const snippetWords = [];
+  const displayLinks = [];
+
+  resultsData.forEach(item => {
+    titleWords.push(...extractWords(item.title));
+    snippetWords.push(...extractWords(item.snippet));
+    displayLinks.push(item.displayLink);
+  });
+
+  visualizeData({
+    titleWords,
+    snippetWords,
+    displayLinks
+  });
+}
+
+// New function to display search results
+function displaySearchResults(resultsData) {
+  const resultsContainer = document.getElementById('results-container');
+  resultsContainer.innerHTML = ''; // Clear previous results
+
+  resultsData.forEach(item => {
+    const resultDiv = document.createElement('div');
+    resultDiv.className = 'search-result';
+
+    // Title with link
+    const title = document.createElement('h3');
+    const titleLink = document.createElement('a');
+    titleLink.href = item.link;
+    titleLink.target = '_blank'; // Open in new tab
+    titleLink.textContent = item.title;
+    title.appendChild(titleLink);
+
+    // Display link (URL)
+    const displayLink = document.createElement('div');
+    displayLink.className = 'display-link';
+    displayLink.textContent = item.displayLink;
+
+    // Snippet
+    const snippet = document.createElement('p');
+    snippet.textContent = item.snippet;
+
+    // Append elements to the result div
+    resultDiv.appendChild(title);
+    resultDiv.appendChild(displayLink);
+    resultDiv.appendChild(snippet);
+
+    // Append result div to the results container
+    resultsContainer.appendChild(resultDiv);
+  });
+
+  // Add attribution as per Google's requirements
+  addAttribution(resultsContainer);
+}
+
+// Function to add Google attribution
+function addAttribution(container) {
+  const attribution = document.createElement('div');
+  attribution.style.fontSize = '12px';
+  attribution.style.color = '#757575';
+  attribution.style.marginTop = '10px';
+  attribution.innerHTML = 'Search results provided by Google';
+  container.appendChild(attribution);
+}
+
 function extractWords(text) {
   return text
     .toLowerCase()
