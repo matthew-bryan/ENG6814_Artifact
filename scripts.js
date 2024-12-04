@@ -61,9 +61,6 @@ function processSearchResults(data) {
   });
 }
 
-// ... (existing code above)
-
-// Update processSearchResults function
 function processSearchResults(data) {
   const items = data.items || [];
   if (!items.length) {
@@ -80,6 +77,62 @@ function processSearchResults(data) {
 
   // Display the search results
   displaySearchResults(resultsData);
+
+  function displayGoogleTrends(query) {
+    // Clear previous trends chart
+    const trendsContainer = document.getElementById('trends-container');
+    trendsContainer.innerHTML = '';
+  
+    // Sanitize and encode the query
+    const sanitizedQuery = query.trim();
+    const encodedQuery = encodeURIComponent(sanitizedQuery);
+  
+    // Log the query for debugging
+    console.log(`Displaying Google Trends for query: ${sanitizedQuery}`);
+  
+    // Check if embed_loader.js is already loaded
+    const existingTrendsScript = document.querySelector('script[src="https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js"]');
+    if (!existingTrendsScript) {
+      // Create and append the trends loader script
+      const trendsScript = document.createElement('script');
+      trendsScript.type = 'text/javascript';
+      trendsScript.src = 'https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js';
+  
+      trendsScript.onload = function() {
+        console.log('Google Trends loader script loaded successfully.');
+        renderTrendsChart(encodedQuery, trendsContainer);
+      };
+  
+      trendsScript.onerror = function() {
+        console.error('Failed to load Google Trends loader script.');
+        trendsContainer.innerHTML = '<p>Error loading Google Trends data. Please try again later.</p>';
+      };
+  
+      document.body.appendChild(trendsScript); // Append to body
+    } else {
+      console.log('Google Trends loader script already loaded.');
+      renderTrendsChart(encodedQuery, trendsContainer);
+    }
+  }
+  
+  function renderTrendsChart(encodedQuery, container) {
+    // Create script element to render the chart
+    const renderScript = document.createElement('script');
+    renderScript.type = 'text/javascript';
+  
+    // Generate the widget code with the user's query
+    const widgetCode = `trends.embed.renderExploreWidget("TIMESERIES", ` +
+    `{"comparisonItem":[{"keyword":"${encodedQuery}","geo":"US","time":"today 5-y"}],"category":0,"property":""}, ` +
+    `{"exploreQuery":"date=today%205-y&geo=US&q=${encodedQuery}&hl=en",` +
+    `"guestPath":"https://trends.google.com:443/trends/embed/"});`;
+  
+    renderScript.innerHTML = widgetCode;
+  
+    // Append the script to the container
+    container.appendChild(renderScript);
+  
+    console.log('Google Trends chart rendered successfully.');
+  }  
 
   const titleWords = [];
   const snippetWords = [];
@@ -281,4 +334,34 @@ function createWordCloud(dataArray, canvasId, chartTitle) {
     rotateRatio: 0,
     backgroundColor: '#fff'
   });
+}
+function displayGoogleTrends(query) {
+  // Clear previous trends chart
+  const trendsContainer = document.getElementById('trends-container');
+  trendsContainer.innerHTML = '';
+
+  // Create script element for trends loader
+  const trendsScript = document.createElement('script');
+  trendsScript.type = 'text/javascript';
+  trendsScript.src = 'https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js';
+
+  // Create script element to render the chart
+  const renderScript = document.createElement('script');
+  renderScript.type = 'text/javascript';
+
+  // Generate the widget code with the user's query
+  const widgetCode = `trends.embed.renderExploreWidget("TIMESERIES", ` +
+    `{"comparisonItem":[{"keyword":"${query}","geo":"US","time":"today 5-y"}],"category":0,"property":""}, ` +
+    `{"exploreQuery":"date=today%205-y&geo=US&q=${encodeURIComponent(query)}&hl=en",` +
+    `"guestPath":"https://trends.google.com:443/trends/embed/"});`;
+
+  renderScript.innerHTML = widgetCode;
+
+  // Append scripts to the trends container
+  trendsContainer.appendChild(trendsScript);
+
+  // Wait for the trends script to load before executing the render script
+  trendsScript.onload = function() {
+    trendsContainer.appendChild(renderScript);
+  };
 }
