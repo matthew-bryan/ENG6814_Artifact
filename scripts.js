@@ -240,9 +240,18 @@ function visualizeData({ titleWords, snippetWords, displayLinks }) {
 }
 
 function createBarChart(dataArray, canvasId, chartTitle) {
+  const container = document.createElement('div');
+  container.className = 'bar-chart-container'; // Wrapper with background
+  document.getElementById('visualization').appendChild(container);
+
+  // Add the standalone title above the chart
+  const title = document.createElement('h3');
+  title.textContent = chartTitle;
+  container.appendChild(title);
+
   const canvas = document.createElement('canvas');
   canvas.id = canvasId;
-  document.getElementById('visualization').appendChild(canvas);
+  container.appendChild(canvas);
 
   const labels = dataArray.map(item => item[0]);
   const counts = dataArray.map(item => item[1]);
@@ -252,10 +261,10 @@ function createBarChart(dataArray, canvasId, chartTitle) {
     data: {
       labels: labels,
       datasets: [{
-        label: chartTitle,
+        label: '', // Clear dataset label to remove legend text
         data: counts,
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: '#1a0dab', 
+        borderColor: '#000',
         borderWidth: 1
       }]
     },
@@ -263,14 +272,24 @@ function createBarChart(dataArray, canvasId, chartTitle) {
       responsive: true,
       plugins: {
         title: {
-          display: true,
-          text: chartTitle
+          display: false // Disable the built-in chart title
+        },
+        legend: {
+          display: false // Disable the chart legend
         }
       },
       scales: {
+        x: {
+          ticks: {
+            color: '#333' // Darker axis labels
+          }
+        },
         y: {
           beginAtZero: true,
-          ticks: { precision: 0 }
+          ticks: {
+            color: '#333', // Darker axis labels
+            precision: 0
+          }
         }
       }
     }
@@ -287,6 +306,8 @@ function createWordCloud(dataArray, canvasId, chartTitle) {
 
   const canvas = document.createElement('canvas');
   canvas.id = canvasId;
+  canvas.width = 400; // Explicit size for word cloud canvas
+  canvas.height = 400;
   container.appendChild(canvas);
 
   document.getElementById('visualization').appendChild(container);
@@ -295,13 +316,13 @@ function createWordCloud(dataArray, canvasId, chartTitle) {
 
   WordCloud(canvas, {
     list: list,
-    gridSize: 8,
+    gridSize: 4, // Smaller grid for better word spacing
     weightFactor: function (size) {
-      return size * 5; // Adjust the size multiplier as needed
+      return size * 8; // Larger size multiplier for words
     },
-    fontFamily: 'Times, serif',
+    fontFamily: 'Arial, sans-serif',
     color: 'random-dark',
-    rotateRatio: 0,
-    backgroundColor: '#fff'
+    rotateRatio: 0.2, // Allow some slight rotation for variety
+    backgroundColor: 'rgb(253, 249, 249)' // Match bar chart background color
   });
 }

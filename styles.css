@@ -157,18 +157,45 @@ body {
     margin: 20px auto;
   }
   
+  /* Word Cloud Specific */
   .wordcloud-container {
+    background-color: rgb(253, 249, 249); /* Match bar chart background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Match bar chart shadow */
     margin: 20px 0;
+    text-align: center;
   }
   
   .wordcloud-container h3 {
     margin-bottom: 10px;
-    color: #f0f0f0;
+    font-size: 24px; /* Larger title for better readability */
+    color: #333; /* Match bar chart title color */
+    text-align: center;
   }
   
-  canvas {
-    max-width: 100%;
+  .wordcloud-container canvas {
+    display: block;
+    margin: 0 auto;
+    width: 400px; /* Explicit width */
+    height: 400px; /* Explicit height */
+  }  
+  
+  /* Bar Chart Specific */
+  .bar-chart-container {
+    background-color: rgb(253, 249, 249); /* Lighter background for contrast */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin: 20px 0;
   }
+  
+  .bar-chart-container h3 {
+    font-size: 24px; /* Larger titles for better readability */
+    color: #333; /* Darker title color */
+    text-align: center;
+    margin-bottom: 15px;
+  }  
   
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
