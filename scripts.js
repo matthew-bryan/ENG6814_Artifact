@@ -2,38 +2,95 @@
 
 document.getElementById('search-form').addEventListener('submit', function(e) {
   e.preventDefault();
+
+  // Get form values
   const query = document.getElementById('search-query').value;
-  fetchSearchResults(query);
+  const numResults = parseInt(document.getElementById('num-results').value, 10);
+  const exactMatch = document.getElementById('exact-match').checked;
+  const dateRestrict = document.getElementById('date-filter').value;
+  const domainFilter = document.getElementById('domain-filter').value.trim();
+
+  fetchSearchResults({ query, numResults, exactMatch, dateRestrict, domainFilter });
 });
 
 const stopWords = [
-  'the', 'and', 'a', 'to', 'of', 'in', 'for', 'is', 'on', 'that', 'with',
+'the', 'and', 'a', 'to', 'of', 'in', 'for', 'is', 'on', 'that', 'with',
   'as', 'by', 'at', 'from', 'it', 'this', 'an', 'be', 'or', 'are', 'was',
   'but', 'not', 'we', 'you', 'your', 'have', 'has', 'will', 'can', 'if',
   'about', 'more', 'our', 'so', 'what', 'when', 'which', 'their', 'they',
   'all', 'there', 'been', 'also', 'into', 'do', 'up', 'out', 'who', 'no',
   'he', 'she', 'her', 'his', 'them', 'one', 'some', 'could', 'would',
-  'should', 'may', 'like', 'just', 'over', 'then', 'now', 'how', 'get'
-];
+  'should', 'may', 'like', 'just', 'over', 'then', 'now', 'how', 'get'];
 
-async function fetchSearchResults(query) {
+async function fetchSearchResults({ query, numResults, exactMatch, dateRestrict, domainFilter }) {
   const apiKey = 'AIzaSyDI2nJOzKpPd74NeLnm3tGBDGSLU00X-44'; // Replace with your actual API key
   const searchEngineId = '726043605d5c7476d'; // Replace with your actual Search Engine ID
-  const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${encodeURIComponent(query)}`;
+  const resultsPerPage = 10;
+  let allItems = [];
 
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    processSearchResults(data);
-  } catch (error) {
-    console.error('Error fetching search results:', error);
+  // Adjust the query for exact match
+  let searchQuery = exactMatch ? `"${query}"` : query;
+
+  // Apply domain filter
+  if (domainFilter) {
+    // Ensure domainFilter starts with '.'
+    const domain = domainFilter.startsWith('.') ? domainFilter : `.${domainFilter}`;
+    searchQuery += ` site:*${domain}`;
   }
+
+  // Prepare additional parameters
+  const additionalParams = new URLSearchParams();
+  if (dateRestrict) {
+    additionalParams.append('dateRestrict', dateRestrict);
+  }
+
+  // Calculate the number of pages to fetch
+  const pages = Math.ceil(numResults / resultsPerPage);
+
+  // Show a loading message or spinner
+  const resultsContainer = document.getElementById('results-container');
+  resultsContainer.innerHTML = '<p>Loading results...</p>';
+
+  for (let i = 0; i < pages; i++) {
+    const startIndex = i * resultsPerPage + 1;
+    const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}` +
+      `&cx=${searchEngineId}&q=${encodeURIComponent(searchQuery)}` +
+      `&start=${startIndex}` +
+      `&${additionalParams.toString()}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data.items) {
+        allItems = allItems.concat(data.items);
+      } else {
+        console.log('No more results found.');
+        break;
+      }
+
+      // Check if we have enough results
+      if (allItems.length >= numResults) {
+        allItems = allItems.slice(0, numResults);
+        break;
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      break;
+    }
+  }
+
+  // Process the collected results
+  processSearchResults({ items: allItems });
 }
 
 function processSearchResults(data) {
   const items = data.items || [];
   if (!items.length) {
     console.log('No results found');
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = '<p>No results found.</p>';
+    clearVisualizations();
     return;
   }
 

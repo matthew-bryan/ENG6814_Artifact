@@ -8,12 +8,58 @@
 <body>
   <h1>Search and Visualize</h1>
   <form id="search-form">
-    <input type="text" id="search-query" placeholder="Enter search term" required>
+    <div class="form-group">
+      <label for="search-query">Search Term:</label>
+      <input type="text" id="search-query" placeholder="Enter search term" required>
+    </div>
+
+      <!-- Exact Match Toggle -->
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="exact-match">
+        Exact Match
+      </label>
+    </div>
+    
+    <!-- Number of Results -->
+    <div class="form-group">
+      <label for="num-results">Number of Results:</label>
+      <select id="num-results">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+        <option value="60">60</option>
+        <option value="70">70</option>
+        <option value="80">80</option>
+        <option value="90">90</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="form-group">
+      <label for="date-filter">Date Filter:</label>
+      <select id="date-filter">
+        <option value="">None</option>
+        <option value="d1">Past Day</option>
+        <option value="w1">Past Week</option>
+        <option value="m1">Past Month</option>
+        <option value="y1">Past Year</option>
+      </select>
+    </div>
+
+    <!-- Domain Filter -->
+    <div class="form-group">
+      <label for="domain-filter">Domain Filter (e.g., .edu, .org):</label>
+      <input type="text" id="domain-filter" placeholder="Enter top-level domain">
+    </div>
+
     <button type="submit">Search</button>
   </form>
 
   <div id="results-container"></div>
-
   <div id="visualization"></div>
 
   <!-- Include Chart.js -->
