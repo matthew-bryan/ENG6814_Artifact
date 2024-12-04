@@ -17,8 +17,8 @@ const stopWords = [
 ];
 
 async function fetchSearchResults(query) {
-  const apiKey = 'AIzaSyDI2nJOzKpPd74NeLnm3tGBDGSLU00X-44';
-  const searchEngineId = '726043605d5c7476d';
+  const apiKey = 'AIzaSyDI2nJOzKpPd74NeLnm3tGBDGSLU00X-44'; // Replace with your actual API key
+  const searchEngineId = '726043605d5c7476d'; // Replace with your actual Search Engine ID
   const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${encodeURIComponent(query)}`;
 
   try {
@@ -44,96 +44,9 @@ function processSearchResults(data) {
     displayLink: item.displayLink
   }));
 
-  const titleWords = [];
-  const snippetWords = [];
-  const displayLinks = [];
-
-  resultsData.forEach(item => {
-    titleWords.push(...extractWords(item.title));
-    snippetWords.push(...extractWords(item.snippet));
-    displayLinks.push(item.displayLink);
-  });
-
-  visualizeData({
-    titleWords,
-    snippetWords,
-    displayLinks
-  });
-}
-
-function processSearchResults(data) {
-  const items = data.items || [];
-  if (!items.length) {
-    console.log('No results found');
-    return;
-  }
-
-  const resultsData = items.map(item => ({
-    title: item.title,
-    snippet: item.snippet,
-    link: item.link,
-    displayLink: item.displayLink
-  }));
-
   // Display the search results
   displaySearchResults(resultsData);
 
-  function displayGoogleTrends(query) {
-    // Clear previous trends chart
-    const trendsContainer = document.getElementById('trends-container');
-    trendsContainer.innerHTML = '';
-  
-    // Sanitize and encode the query
-    const sanitizedQuery = query.trim();
-    const encodedQuery = encodeURIComponent(sanitizedQuery);
-  
-    // Log the query for debugging
-    console.log(`Displaying Google Trends for query: ${sanitizedQuery}`);
-  
-    // Check if embed_loader.js is already loaded
-    const existingTrendsScript = document.querySelector('script[src="https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js"]');
-    if (!existingTrendsScript) {
-      // Create and append the trends loader script
-      const trendsScript = document.createElement('script');
-      trendsScript.type = 'text/javascript';
-      trendsScript.src = 'https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js';
-  
-      trendsScript.onload = function() {
-        console.log('Google Trends loader script loaded successfully.');
-        renderTrendsChart(encodedQuery, trendsContainer);
-      };
-  
-      trendsScript.onerror = function() {
-        console.error('Failed to load Google Trends loader script.');
-        trendsContainer.innerHTML = '<p>Error loading Google Trends data. Please try again later.</p>';
-      };
-  
-      document.body.appendChild(trendsScript); // Append to body
-    } else {
-      console.log('Google Trends loader script already loaded.');
-      renderTrendsChart(encodedQuery, trendsContainer);
-    }
-  }
-  
-  function renderTrendsChart(encodedQuery, container) {
-    // Create script element to render the chart
-    const renderScript = document.createElement('script');
-    renderScript.type = 'text/javascript';
-  
-    // Generate the widget code with the user's query
-    const widgetCode = `trends.embed.renderExploreWidget("TIMESERIES", ` +
-    `{"comparisonItem":[{"keyword":"${encodedQuery}","geo":"US","time":"today 5-y"}],"category":0,"property":""}, ` +
-    `{"exploreQuery":"date=today%205-y&geo=US&q=${encodedQuery}&hl=en",` +
-    `"guestPath":"https://trends.google.com:443/trends/embed/"});`;
-  
-    renderScript.innerHTML = widgetCode;
-  
-    // Append the script to the container
-    container.appendChild(renderScript);
-  
-    console.log('Google Trends chart rendered successfully.');
-  }  
-
   const titleWords = [];
   const snippetWords = [];
   const displayLinks = [];
@@ -151,7 +64,7 @@ function processSearchResults(data) {
   });
 }
 
-// New function to display search results
+// Function to display search results
 function displaySearchResults(resultsData) {
   const resultsContainer = document.getElementById('results-container');
   resultsContainer.innerHTML = ''; // Clear previous results
@@ -334,34 +247,4 @@ function createWordCloud(dataArray, canvasId, chartTitle) {
     rotateRatio: 0,
     backgroundColor: '#fff'
   });
-}
-function displayGoogleTrends(query) {
-  // Clear previous trends chart
-  const trendsContainer = document.getElementById('trends-container');
-  trendsContainer.innerHTML = '';
-
-  // Create script element for trends loader
-  const trendsScript = document.createElement('script');
-  trendsScript.type = 'text/javascript';
-  trendsScript.src = 'https://ssl.gstatic.com/trends_nrtr/3898_RC01/embed_loader.js';
-
-  // Create script element to render the chart
-  const renderScript = document.createElement('script');
-  renderScript.type = 'text/javascript';
-
-  // Generate the widget code with the user's query
-  const widgetCode = `trends.embed.renderExploreWidget("TIMESERIES", ` +
-    `{"comparisonItem":[{"keyword":"${query}","geo":"US","time":"today 5-y"}],"category":0,"property":""}, ` +
-    `{"exploreQuery":"date=today%205-y&geo=US&q=${encodeURIComponent(query)}&hl=en",` +
-    `"guestPath":"https://trends.google.com:443/trends/embed/"});`;
-
-  renderScript.innerHTML = widgetCode;
-
-  // Append scripts to the trends container
-  trendsContainer.appendChild(trendsScript);
-
-  // Wait for the trends script to load before executing the render script
-  trendsScript.onload = function() {
-    trendsContainer.appendChild(renderScript);
-  };
 }
