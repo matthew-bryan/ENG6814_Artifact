@@ -1,53 +1,182 @@
-/* Existing styles */
-.wordcloud-container {
-    margin: 20px 0;
-}
-
-.wordcloud-container h3 {
-margin-bottom: 10px;
-}
-
-canvas {
-max-width: 100%;
-}
-
-/* New styles for search results */
-#results-container {
-max-height: 400px;
-overflow-y: auto;
-margin: 20px 0;
-padding: 10px;
-border: 1px solid #ccc;
-}
-
-.search-result {
-margin-bottom: 20px;
-}
-
-.search-result h3 {
-margin: 0;
-font-size: 18px;
-}
-
-.search-result a {
-text-decoration: none;
-color: #1a0dab;
-}
-
-.search-result a:hover {
-text-decoration: underline;
-}
-
-.search-result .display-link {
-color: #006621;
-font-size: 14px;
-}
-
-.search-result p {
-color: #4d5156;
-font-size: 14px;
-}
-
-.trends-container {
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2c2c2c;
+    color: #f0f0f0;
+  }
+  
+  a {
+    color: #1a0dab;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Banner Styles */
+  .banner {
+    position: relative;
+    text-align: center;
+    max-height: 300px;
+    overflow: hidden;
+  }
+  
+  .banner img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    padding: 10px 20px; /* Add padding around the text */
+    border-radius: 8px; /* Slight rounding for a softer look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+  }
+  
+  .banner-text h1 {
+    font-size: 48px;
+    margin: 0;
+    color: #333; /* Dark color for the text */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8); /* Optional text shadow for contrast */
+  }
+  
+  /* Form Styles */
+  form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #3c3c3c;
+    border-radius: 8px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #f0f0f0;
+  }
+  
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #2c2c2c;
+    color: #f0f0f0;
+    cursor: pointer;
+  }
+  
+  /* Remove any appearance properties */
+  select {
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+  }
+  
+  input[type="text"]::placeholder {
+    color: #aaa;
+  }
+  
+  select:focus {
+    border-color: #1a73e8;
+    outline: none;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #1a73e8;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #155ab6;
+  }
+  
+  /* Results Container */
+  #results-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    color: #000;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 400px; /* Limit the height of the container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for emphasis */
+  }
+  
+  .search-result {
+    margin-bottom: 20px;
+  }
+  
+  .search-result h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .search-result a {
+    text-decoration: none;
+    color: #1a0dab;
+  }
+  
+  .search-result a:hover {
+    text-decoration: underline;
+  }
+  
+  .search-result .display-link {
+    color: #006621;
+    font-size: 14px;
+  }
+  
+  .search-result p {
+    color: #4d5156;
+    font-size: 14px;
+  }
+  
+  /* Visualization Styles */
+  #visualization {
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  .wordcloud-container {
     margin: 20px 0;
   }
+  
+  .wordcloud-container h3 {
+    margin-bottom: 10px;
+    color: #f0f0f0;
+  }
+  
+  canvas {
+    max-width: 100%;
+  }
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Arial, sans-serif;
+    color: #f0f0f0;
+  }
+  
+  /* Main Content */
+  main {
+    padding: 20px;
+  }  
