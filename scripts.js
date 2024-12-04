@@ -326,3 +326,66 @@ function createWordCloud(dataArray, canvasId, chartTitle) {
     backgroundColor: 'rgb(253, 249, 249)' // Match bar chart background color
   });
 }
+
+async function loadQuotes() {
+  try {
+    const response = await fetch('quotes.json');
+    const quotes = await response.json();
+
+    if (!quotes || quotes.length === 0) {
+      console.error('No quotes found in the JSON file.');
+      return;
+    }
+
+    cycleQuotes(quotes);
+  } catch (error) {
+    console.error('Error loading quotes:', error);
+  }
+}
+
+function cycleQuotes(quotes) {
+  let currentIndex = 0;
+  let intervalId;
+
+  const quoteElement = document.getElementById('quote-text');
+  const authorElement = document.getElementById('quote-author');
+  const quoteBox = document.getElementById('quote-box');
+
+  function displayQuote() {
+    const currentQuote = quotes[currentIndex];
+
+    // Remove the visible class to start fade-out
+    quoteElement.classList.remove('visible');
+    authorElement.classList.remove('visible');
+
+    setTimeout(() => {
+      // Update the content during the fade-out
+      if (currentQuote && currentQuote.quote) {
+        quoteElement.textContent = `"${currentQuote.quote}"`;
+        authorElement.textContent = currentQuote.author ? `— ${currentQuote.author}` : '';
+      } else {
+        console.error('Quote or author is missing:', currentQuote);
+      }
+
+      // Add the visible class to start fade-in
+      quoteElement.classList.add('visible');
+      authorElement.classList.add('visible');
+    }, 1000); // Matches the CSS transition duration
+
+    currentIndex = (currentIndex + 1) % quotes.length;
+  }
+
+  // Start cycling quotes
+  displayQuote(); // Show the first quote immediately
+  intervalId = setInterval(displayQuote, 10000);
+
+  // Pause on hover
+  quoteBox.addEventListener('mouseenter', () => clearInterval(intervalId));
+  quoteBox.addEventListener('mouseleave', () => {
+    intervalId = setInterval(displayQuote, 10000);
+  });
+}
+
+// Load quotes when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', loadQuotes);
+

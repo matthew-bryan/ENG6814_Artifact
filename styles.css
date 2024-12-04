@@ -207,3 +207,43 @@ body {
   main {
     padding: 20px;
   }  
+
+  /* Quote Box */
+  #quote-box {
+    background-color: rgba(255, 255, 255, 0.9); /* Light-colored box */
+    color: #333; /* Dark text for readability */
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px; /* Consistent with .quote-container */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    position: relative; /* Required for animations */
+    overflow: hidden; /* Ensure smooth fade-ins/outs don't exceed the box */
+  }
+  
+  #quote-text,
+  #quote-author {
+    opacity: 0; /* Start invisible */
+    transition: opacity 1s ease-in-out; /* Fade in/out effect */
+    position: relative;
+  }
+  
+  #quote-text.visible,
+  #quote-author.visible {
+    opacity: 1; /* Fully visible */
+  }
+  
+  #quote-text {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  #quote-author {
+    font-size: 16px;
+    font-style: italic;
+    color: #555;
+  }
+  
+  
